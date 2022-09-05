@@ -7,9 +7,9 @@ router.get("/test-me", function (req, res) {
   res.send("Working fine");
 });
 
-router.post("/createAuthorData", controlers.createAuthorData);
-router.post("/createBlogData",middleWare.checkAuthId,controlers.createBlogData);
-router.get("/getBlogs",controlers.getBlogs);
+router.post("/authors", controlers.createAuthorData);
+router.post("/blogs",middleWare.checkAuthId,controlers.createBlogData);
+router.get("/blogs",controlers.getBlogs);
 
 
 module.exports = router;
