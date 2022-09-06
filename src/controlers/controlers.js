@@ -27,7 +27,7 @@ async function getBlogs(req, res) {
     Data.isDeleted = false;
     Data.isPublished = true;
     const saveData = await blogModel.find(Data);
-    return res.status(201).send(saveData);
+    return res.status(200).send(saveData);
   } catch (err) {
     return res.status(500).send({ msg: "error", error: err.message });
   }
