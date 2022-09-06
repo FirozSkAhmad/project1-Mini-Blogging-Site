@@ -51,7 +51,7 @@ async function updateBlogs(req, res) {
       delete Data["subcategory"];
       // console.log(Data);
       Data.isPublished = true;
-      Data.publishedAt = moment().format("YYYY");
+      Data.publishedAt = moment().format();
 
       const updatedData = await blogModel.findByIdAndUpdate(
         { _id: Id },

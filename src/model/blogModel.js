@@ -24,7 +24,7 @@ const blogSchema = new mongoose.Schema(
       type: String,
     },
     publishedAt: {
-      type: Number,
+      type: String,
     },
     isPublished: { type: Boolean, default: false },
   },
