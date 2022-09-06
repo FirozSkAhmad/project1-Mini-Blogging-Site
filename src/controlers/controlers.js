@@ -5,6 +5,9 @@ const moment = require("moment");
 async function createAuthorData(req, res) {
   try {
     const Data = req.body;
+    if (!Data) {
+      return res.status(400).send({ status: false, msg: "Bad request" });
+    }
     const saveData = await authorModel.create(Data);
     return res.status(201).send({ status: true, data: saveData });
   } catch (err) {
@@ -15,6 +18,9 @@ async function createAuthorData(req, res) {
 async function createBlogData(req, res) {
   try {
     const Data = req.body;
+    if (!Data) {
+      return res.status(400).send({ status: false, msg: "Bad request" });
+    }
     const saveData = await blogModel.create(Data);
     return res.status(201).send({ status: true, data: saveData });
   } catch (err) {
@@ -28,6 +34,9 @@ async function getBlogs(req, res) {
     Data.isDeleted = false;
     Data.isPublished = true;
     const saveData = await blogModel.find(Data);
+    if (saveData.length === 0) {
+      return res.status(404).send({ status: false, msg: "page not founded" });
+    }
     return res.status(200).send({ status: true, data: saveData });
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
@@ -41,10 +50,13 @@ async function updateBlogs(req, res) {
     if (!Data) {
       return res.status(400).send({ status: false, msg: "Bad request" });
     }
-    const getData = await blogModel.findByIdAndUpdate(
-      { _id: Id },
+    const getData = await blogModel.findOneAndUpdate(
+      { _id: Id, isDeleted: false },
       { $push: { tags: Data.tags, subcategory: Data.subcategory } }
     );
+    if (!getData) {
+      return res.status(404).send({ status: false, msg: "page not founded" });
+    }
     if (getData.isPublished === false) {
       // console.log(Data);
       delete Data["tags"];
