@@ -43,13 +43,13 @@ async function updateBlogs(req, res) {
     }
     const getData = await blogModel.findByIdAndUpdate(
       { _id: Id },
-      { $push: { tags: Data.tags, subcategory: Data.subcategory } },
+      { $push: { tags: Data.tags, subcategory: Data.subcategory } }
     );
     if (getData.isPublished === false) {
-      console.log(Data);
+      // console.log(Data);
       delete Data["tags"];
       delete Data["subcategory"];
-      console.log(Data);
+      // console.log(Data);
       Data.isPublished = true;
       Data.publishedAt = moment().format("YYYY");
 
@@ -60,9 +60,10 @@ async function updateBlogs(req, res) {
       );
       return res.status(200).send({ status: true, data: updatedData });
     } else {
-      console.log(Data);
+      // console.log(Data);
       delete Data["tags"];
       delete Data["subcategory"];
+      // console.log(Data);
       const updatedData = await blogModel.findByIdAndUpdate(
         { _id: Id },
         { $set: Data },
@@ -74,8 +75,53 @@ async function updateBlogs(req, res) {
     return res.status(500).send({ status: false, msg: err.message });
   }
 }
+let deleteBlogById = async function (req, res) {
+  try {
+    let Id = req.params.blogId;
+    await blogModel.findByIdAndUpdate(
+      { _id: Id },
+      {
+        $set: {
+          isDeleted: true,
+          deletedAt: moment().format(),
+        },
+      },
+      { new: true }
+    );
+    return res.status(200).send();
+  } catch (err) {
+    return res.status(500).send({ status: false, msg: err.message });
+  }
+};
+
+let deleteBlog = async function (req, res) {
+  try {
+    const Data = req.query;
+    if (Object.keys(Data) < 1) {
+      return res.status(400).send({ msg: "bad request" });
+    }
+    const deleteBlog = await blogModel.findOneAndUpdate(
+      Data,
+      {
+        $set: {
+          isDeleted: true,
+          deletedAt: moment().format(),
+        },
+      },
+      { new: true }
+    );
+    if (!deleteBlog) {
+      return res.status(404).send({ status: false, msg: "page not founded" });
+    }
+    return res.status(200).send({ status: true, data: deleteBlog });
+  } catch (err) {
+    return res.status(500).send({ msg: "error", error: err.message });
+  }
+};
 
 module.exports.createAuthorData = createAuthorData;
 module.exports.createBlogData = createBlogData;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
+module.exports.deleteBlogById = deleteBlogById;
+module.exports.deleteBlog = deleteBlog;

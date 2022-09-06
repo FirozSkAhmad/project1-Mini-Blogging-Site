@@ -23,7 +23,7 @@ async function checkBlogId(req, res, next) {
     let Id = req.params.blogId;
     const getData = await blogModel.findOne({ _id: Id, isDeleted: false });
     if (!getData) {
-      return res.status(404).send({status: false, msg:"page not founded"});
+      return res.status(404).send({status: false, msg:"page not founded OR document is already deleted"});
     }
     next();
   } catch (err) {
