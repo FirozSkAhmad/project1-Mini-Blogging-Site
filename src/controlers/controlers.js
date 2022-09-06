@@ -90,8 +90,8 @@ async function updateBlogs(req, res) {
 let deleteBlogById = async function (req, res) {
   try {
     let Id = req.params.blogId;
-    await blogModel.findByIdAndUpdate(
-      { _id: Id },
+    const deletedData = await blogModel.findByIdAndUpdate(
+      { _id: Id, isDeleted: false },
       {
         $set: {
           isDeleted: true,
@@ -100,6 +100,9 @@ let deleteBlogById = async function (req, res) {
       },
       { new: true }
     );
+    if (!deletedData) {
+      return res.status(404).send({ status: false, msg: "page not founded" });
+    }
     return res.status(200).send();
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
@@ -109,10 +112,11 @@ let deleteBlogById = async function (req, res) {
 let deleteBlog = async function (req, res) {
   try {
     const Data = req.query;
-    if (Object.keys(Data) < 1) {
-      return res.status(400).send({ msg: "bad request" });
+    if (Object.keys(Data).length < 1) {
+      return res.status(400).send({ status: false, msg: "bad request" });
     }
-    const deleteBlog = await blogModel.findOneAndUpdate(
+    Data.isDeleted = false;
+    const deleteBlog = await blogModel.updateMany(
       Data,
       {
         $set: {
@@ -122,7 +126,7 @@ let deleteBlog = async function (req, res) {
       },
       { new: true }
     );
-    if (!deleteBlog) {
+    if (deleteBlog.modifiedCount === 0) {
       return res.status(404).send({ status: false, msg: "page not founded" });
     }
     return res.status(200).send({ status: true, data: deleteBlog });
