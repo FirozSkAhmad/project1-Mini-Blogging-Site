@@ -13,6 +13,7 @@ router.get("/blogs", controlers.getBlogs);
 router.put("/blogs/:blogId", middleWare.checkBlogId, controlers.updateBlogs);
 router.delete("/blogs/:blogId",middleWare.checkBlogId,controlers.deleteBlogById);
 router.delete("/blogs",controlers.deleteBlog);
+router.post('/login', controlers.login)
 
 module.exports = router;
 

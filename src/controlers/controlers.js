@@ -1,6 +1,7 @@
 const authorModel = require("../model/authorModel");
 const blogModel = require("../model/blogModel");
 const moment = require("moment");
+const jwt = require ('jsonwebtoken')
 
 async function createAuthorData(req, res) {
   try {
@@ -61,7 +62,7 @@ async function updateBlogs(req, res) {
       // console.log(Data);
       delete Data["tags"];
       delete Data["subcategory"];
-      // console.log(Data);
+      // console.log(Data)//;
       Data.isPublished = true;
       Data.publishedAt = moment().format();
 
@@ -135,9 +136,31 @@ let deleteBlog = async function (req, res) {
   }
 };
 
+async function login(req,res){
+  try{
+  
+    const data = req.body
+    const logined = await authorModel.findOne(data)
+    if(!logined){
+      return res.status(401).send({status : false, msg : "email or password is wrong"})
+    }
+    const token = await jwt.sign(
+      {
+        authorId : logined._id.toString(),
+        batch : "Plutonium"
+      },
+      "project-pltm"
+    )
+    return res.status(201).send({status : true, token})
+  }catch(err){
+    return res.status(500).send({status : false, msg : err.message})
+  }
+}
+
 module.exports.createAuthorData = createAuthorData;
 module.exports.createBlogData = createBlogData;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
 module.exports.deleteBlogById = deleteBlogById;
 module.exports.deleteBlog = deleteBlog;
+module.exports.login = login
