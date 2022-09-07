@@ -13,6 +13,12 @@ const Authentication = async function (req, res, next) {
         return res.status(401).send({ status: false, msg: error.message });
       } else {
         req.decodedPayload = decoded;
+        // {
+        //     decodedPayload:{
+        //         authorId : logined._id.toString(),
+        //         batch : "Plutonium"
+        //     }
+        // }
         console.log(req.decodedPayload)
         next();
       }
@@ -23,4 +29,21 @@ const Authentication = async function (req, res, next) {
   }
 };
 
+async function Authorisation(req,res,next){
+    try{
+        let authorId = req.decodedPayload.authorId
+        let data = await blogModel.findById(req.params.blogId)
+        console.log(data.authorId);
+        let dataAuthorId = data.authorId.toString()
+        if(dataAuthorId === authorId){
+            next()
+        }else{
+            return res.status(403).send({status : false, msg : "User not authorised"})
+        }
+    }catch(error){
+        res.status(500).send({status : false, msg : error.message})
+    }
+}
+
 module.exports.Authentication = Authentication;
+module.exports.Authorisation = Authorisation

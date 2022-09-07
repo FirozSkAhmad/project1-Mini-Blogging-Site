@@ -6,7 +6,7 @@ const route = require("./router/router");
 const { default: mongoose } = require("mongoose");
 
 app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({ extended: true }));
+// app.use(bodyparser.urlencoded({ extended: true }));
 
 app.use("/", route);
 
@@ -15,7 +15,7 @@ mongoose
     "mongodb+srv://Firoz_Shaik_:XaFPzUPEGu5fK1KS@cluster0.dshhzz6.mongodb.net/Firoz_Shaik-project1-DB",
     { useNewUrlParser: true }
   )
-  .then(() => console.log("MongoDB is Connted"))
+  .then(() => console.log("MongoDB is Connected"))
   .catch((err) => console.log(err));
 
 app.listen(3000, function () {
