@@ -140,7 +140,7 @@ async function login(req, res) {
         .status(401)
         .send({ status: false, msg: "email or password is wrong" });
     }
-    const token = await jwt.sign(
+    const token = jwt.sign(
       {
         authorId: logined._id.toString(),
         batch: "Plutonium",
