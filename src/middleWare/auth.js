@@ -6,7 +6,7 @@ const Authentication = async function (req, res, next) {
   try {
     const getToken = req.headers["x-auth-token"];
     if (!getToken) {
-      return res.status(401).send({ staus: false, msg: "require token " });
+      return res.status(401).send({ staus: false, msg: "require token" });
     }
     jwt.verify(getToken, "project-pltm", (error, decoded) => {
       if (error) {
@@ -19,7 +19,7 @@ const Authentication = async function (req, res, next) {
         //         batch : "Plutonium"
         //     }
         // }
-        console.log(req.decodedPayload);
+        // console.log(req.decodedPayload);
         next();
       }
     });
@@ -51,7 +51,7 @@ async function Authorisation2(req, res, next) {
   try {
     req.authorId = req.decodedPayload.authorId;
     let data = await blogModel.find(req.query).select({ authorId: 1, _id: 0 });
-    console.log(data);
+    // console.log(data);
     let Id = "";
     const authorIds = data.map((x) => x.authorId.toString());
     console.log(authorIds);
@@ -63,7 +63,7 @@ async function Authorisation2(req, res, next) {
         }
       }
     }
-    console.log(Id);
+    // console.log(Id);
     if (!Id) {
       return res
         .status(403)

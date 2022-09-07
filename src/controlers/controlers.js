@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 async function createAuthorData(req, res) {
   try {
     const Data = req.body;
-    if (!Data) {
+    if (Object.keys(Data).length < 1) {
       return res.status(400).send({ status: false, msg: "Bad request" });
     }
     const saveData = await authorModel.create(Data);
@@ -19,9 +19,6 @@ async function createAuthorData(req, res) {
 async function createBlogData(req, res) {
   try {
     const Data = req.body;
-    if (!Data) {
-      return res.status(400).send({ status: false, msg: "Bad request" });
-    }
     const saveData = await blogModel.create(Data);
     return res.status(201).send({ status: true, data: saveData });
   } catch (err) {
@@ -48,7 +45,7 @@ async function updateBlogs(req, res) {
   try {
     const Id = req.params.blogId;
     const Data = req.body;
-    if (!Data) {
+    if (Object.keys(Data).length < 1) {
       return res.status(400).send({ status: false, msg: "Bad request" });
     }
     const getData = await blogModel.findOneAndUpdate(
@@ -134,6 +131,11 @@ let deleteBlog = async function (req, res) {
 async function login(req, res) {
   try {
     const data = req.body;
+    if (Object.keys(data).length < 1) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "required email and password" });
+    }
     const logined = await authorModel.findOne(data);
     if (!logined) {
       return res
@@ -147,7 +149,7 @@ async function login(req, res) {
       },
       "project-pltm"
     );
-    return res.status(201).send({ status: true, token });
+    return res.status(201).send({ status: true, data: token });
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
