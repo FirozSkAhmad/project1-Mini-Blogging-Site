@@ -1,7 +1,7 @@
 const authorModel = require("../model/authorModel");
 const blogModel = require("../model/blogModel");
 const moment = require("moment");
-const jwt = require ('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 async function createAuthorData(req, res) {
   try {
@@ -112,13 +112,8 @@ let deleteBlogById = async function (req, res) {
 
 let deleteBlog = async function (req, res) {
   try {
-    const Data = req.query;
-    if (Object.keys(Data).length < 1) {
-      return res.status(400).send({ status: false, msg: "bad request" });
-    }
-    Data.isDeleted = false;
     const deleteBlog = await blogModel.updateMany(
-      Data,
+      { authorId: req.authorId, isDeleted: false },
       {
         $set: {
           isDeleted: true,
@@ -136,24 +131,25 @@ let deleteBlog = async function (req, res) {
   }
 };
 
-async function login(req,res){
-  try{
-  
-    const data = req.body
-    const logined = await authorModel.findOne(data)
-    if(!logined){
-      return res.status(401).send({status : false, msg : "email or password is wrong"})
+async function login(req, res) {
+  try {
+    const data = req.body;
+    const logined = await authorModel.findOne(data);
+    if (!logined) {
+      return res
+        .status(401)
+        .send({ status: false, msg: "email or password is wrong" });
     }
     const token = await jwt.sign(
       {
-        authorId : logined._id.toString(),
-        batch : "Plutonium"
+        authorId: logined._id.toString(),
+        batch: "Plutonium",
       },
       "project-pltm"
-    )
-    return res.status(201).send({status : true, token})
-  }catch(err){
-    return res.status(500).send({status : false, msg : err.message})
+    );
+    return res.status(201).send({ status: true, token });
+  } catch (err) {
+    return res.status(500).send({ status: false, msg: err.message });
   }
 }
 
@@ -163,4 +159,4 @@ module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
 module.exports.deleteBlogById = deleteBlogById;
 module.exports.deleteBlog = deleteBlog;
-module.exports.login = login
+module.exports.login = login;
