@@ -13,8 +13,8 @@ router.post("/authors", controlers.createAuthorData);
 router.post("/blogs", middleWare.checkAuthId, authWare.Authentication, controlers.createBlogData);
 router.get("/blogs", controlers.getBlogs);
 router.put("/blogs/:blogId", middleWare.checkBlogId, controlers.updateBlogs);
-router.delete("/blogs/:blogId", middleWare.checkBlogId, controlers.deleteBlogById);
-router.delete("/blogs", controlers.deleteBlog);
+router.delete("/blogs/:blogId", middleWare.checkBlogId,authWare.Authentication, controlers.deleteBlogById);
+router.delete("/blogs",authWare.Authentication, controlers.deleteBlog);
 router.post('/login', controlers.login)
 
 module.exports = router;
