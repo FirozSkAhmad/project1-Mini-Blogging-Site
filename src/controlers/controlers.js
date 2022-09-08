@@ -23,12 +23,12 @@ async function createAuthorData(req, res) {
     if (!Data.title) {
       return res.status(400).send({ status: false, msg: "required title" });
     }
-    if (!["Mr", "Mrs", "Miss"].includes(Data.title)) {
+    if (!["Mr", "Mrs", "Miss"].includes(Data.title.trim())) {
       return res
         .status(400)
         .send({ status: false, msg: "required valid title" });
     }
-    if (!validator.isEmail(Data.email)) {
+    if (!validator.isEmail(Data.email.trim())) {
       return res
         .status(400)
         .send({ status: false, msg: "required valid email" });
