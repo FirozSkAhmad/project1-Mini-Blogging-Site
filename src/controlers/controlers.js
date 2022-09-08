@@ -53,7 +53,9 @@ async function updateBlogs(req, res) {
       { $push: { tags: Data.tags, subcategory: Data.subcategory } }
     );
     if (!getData) {
-      return res.status(404).send({ status: false, msg: "Blog already deleted" });
+      return res
+        .status(404)
+        .send({ status: false, msg: "Blog already deleted" });
     }
     if (getData.isPublished === false) {
       // console.log(Data);
@@ -86,12 +88,10 @@ async function updateBlogs(req, res) {
   }
 }
 
-
 let deleteBlogById = async function (req, res) {
   try {
     let Id = req.params.blogId;
     const deletedData = await blogModel.updateMany(
-
       { _id: Id, isDeleted: false },
       {
         $set: {
@@ -123,7 +123,9 @@ let deleteBlog = async function (req, res) {
       { new: true }
     );
     if (deleteBlog.modifiedCount === 0) {
-      return res.status(404).send({ status: false, msg: "Blog already deleted" });
+      return res
+        .status(404)
+        .send({ status: false, msg: "Blog already deleted" });
     }
     return res.status(200).send({ status: true, data: deletedBlog });
   } catch (err) {
@@ -134,14 +136,18 @@ let deleteBlog = async function (req, res) {
 async function login(req, res) {
   try {
     const data = req.body;
-    if(!data.email && !data.password){
-      return res.status(400).send({status : false, msg : "email and password is required"})
+    if (!data.email && !data.password) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "email and password is required" });
     }
-    if(!data.email){
-      return res.status(400).send({status : false, msg : "email is required"})
+    if (!data.email) {
+      return res.status(400).send({ status: false, msg: "email is required" });
     }
-    if(!data.password){
-      return res.status(400).send({status : false, msg : "password is required"})
+    if (!data.password) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "password is required" });
     }
     if (Object.keys(data).length < 1) {
       return res

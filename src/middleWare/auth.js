@@ -51,10 +51,8 @@ async function Authorisation2(req, res, next) {
   try {
     req.authorId = req.decodedPayload.authorId;
     let data = await blogModel.find(req.query).select({ authorId: 1, _id: 0 });
-    if(data.length===0){
-      return res
-        .status(404)
-        .send({ status: false, msg: "Data not founded" });
+    if (data.length === 0) {
+      return res.status(404).send({ status: false, msg: "Data not founded" });
     }
     // console.log(data);
     let Id = "";
