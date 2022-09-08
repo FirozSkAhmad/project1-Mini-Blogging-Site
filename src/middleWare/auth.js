@@ -38,7 +38,7 @@ async function Authorisation0(req, res, next) {
     } else {
       return res
         .status(403)
-        .send({ status: false, msg: "User not authorised" });
+        .send({ status: false, msg: "Given authorId is incorrect" });
     }
   } catch (error) {
     return res.status(500).send({ status: false, msg: error.message });
