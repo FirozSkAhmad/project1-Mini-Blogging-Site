@@ -8,6 +8,8 @@ async function checkAuthId(req, res, next) {
       return res.status(400).send({ status: false, msg: "required Data" });
     }
     let Id = Data.authorId;
+    if(!Id||Id.length==0){return res.status(400).send({status: false, msg : "provide authorId"})}
+
     const getData = await authorModel.findById(Id);
     if (!getData) {
       return res
@@ -23,11 +25,11 @@ async function checkAuthId(req, res, next) {
 async function checkBlogId(req, res, next) {
   try {
     let Id = req.params.blogId;
-    // if(!Id){
-    //   return res
-    //     .status(400)
-    //     .send({ status: false, msg: "required blogId" });
-    // }
+    if(Id==":blogId"){
+      return res
+        .status(400)
+        .send({ status: false, msg: "required blogId" });
+    }
     const getData = await blogModel.findOne({ _id: Id });
     if (!getData) {
       return res.status(404).send({
