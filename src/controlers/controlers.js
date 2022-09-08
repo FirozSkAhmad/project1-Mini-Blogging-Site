@@ -9,8 +9,8 @@ async function createAuthorData(req, res) {
     if (Object.keys(Data).length < 1) {
       return res.status(400).send({ status: false, msg: "Bad request" });
     }
-    const saveData = await authorModel.create(Data);
-    return res.status(201).send({ status: true, data: saveData });
+    const savedData = await authorModel.create(Data);
+    return res.status(201).send({ status: true, data: savedData });
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
@@ -19,8 +19,8 @@ async function createAuthorData(req, res) {
 async function createBlogData(req, res) {
   try {
     const Data = req.body;
-    const saveData = await blogModel.create(Data);
-    return res.status(201).send({ status: true, data: saveData });
+    const savedData = await blogModel.create(Data);
+    return res.status(201).send({ status: true, data: savedData });
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
@@ -31,11 +31,11 @@ async function getBlogs(req, res) {
     const Data = req.query;
     Data.isDeleted = false;
     Data.isPublished = true;
-    const saveData = await blogModel.find(Data);
-    if (saveData.length === 0) {
+    const savedData = await blogModel.find(Data);
+    if (savedData.length === 0) {
       return res.status(404).send({ status: false, msg: "page not founded" });
     }
-    return res.status(200).send({ status: true, data: saveData });
+    return res.status(200).send({ status: true, data: savedData });
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
@@ -45,9 +45,6 @@ async function updateBlogs(req, res) {
   try {
     const Id = req.params.blogId;
     const Data = req.body;
-    if (Object.keys(Data).length < 1) {
-      return res.status(400).send({ status: false, msg: "Bad request" });
-    }
     const getData = await blogModel.findOneAndUpdate(
       { _id: Id, isDeleted: false },
       { $push: { tags: Data.tags, subcategory: Data.subcategory } }
