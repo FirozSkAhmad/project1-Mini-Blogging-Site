@@ -39,6 +39,9 @@ async function createAuthorData(req, res) {
         .status(400)
         .send({ status: false, msg: "email is already taken" });
     }
+    if (!Data.password) {
+      return res.status(400).send({ status: false, msg: "required password" });
+    }
     if (!checkPassword(Data.password)) {
       return res.status(400).send({
         status: false,
