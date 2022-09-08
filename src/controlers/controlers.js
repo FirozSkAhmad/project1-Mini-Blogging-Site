@@ -131,6 +131,15 @@ let deleteBlog = async function (req, res) {
 async function login(req, res) {
   try {
     const data = req.body;
+    if(!data.email && !data.password){
+      return res.status(400).send({status : false, msg : "email and password is required"})
+    }
+    if(!data.email){
+      return res.status(400).send({status : false, msg : "email is required"})
+    }
+    if(!data.password){
+      return res.status(400).send({status : false, msg : "password is required"})
+    }
     if (Object.keys(data).length < 1) {
       return res
         .status(400)
