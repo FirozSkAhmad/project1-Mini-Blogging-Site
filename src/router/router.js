@@ -11,23 +11,22 @@ router.get("/test-me", function (req, res) {
 router.post("/authors", controlers.createAuthorData);
 router.post(
   "/blogs",
-  middleWare.checkAuthId,
   authWare.Authentication,
-  authWare.Authorisation0,
+  middleWare.checkAuthId,
   controlers.createBlogData
 );
 router.get("/blogs", authWare.Authentication, controlers.getBlogs);
 router.put(
   "/blogs/:blogId",
-  middleWare.checkBlogId,
   authWare.Authentication,
+  middleWare.checkBlogId,
   authWare.Authorisation1,
   controlers.updateBlogs
 );
 router.delete(
   "/blogs/:blogId",
-  middleWare.checkBlogId,
   authWare.Authentication,
+  middleWare.checkBlogId,
   authWare.Authorisation1,
   controlers.deleteBlogById
 );

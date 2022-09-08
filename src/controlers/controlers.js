@@ -53,7 +53,7 @@ async function updateBlogs(req, res) {
       { $push: { tags: Data.tags, subcategory: Data.subcategory } }
     );
     if (!getData) {
-      return res.status(404).send({ status: false, msg: "page not founded" });
+      return res.status(404).send({ status: false, msg: "Blog already deleted" });
     }
     if (getData.isPublished === false) {
       // console.log(Data);
@@ -112,7 +112,7 @@ let deleteBlogById = async function (req, res) {
 
 let deleteBlog = async function (req, res) {
   try {
-    const deleteBlog = await blogModel.updateMany(
+    const deletedBlog = await blogModel.updateMany(
       { authorId: req.authorId, isDeleted: false },
       {
         $set: {
@@ -123,9 +123,9 @@ let deleteBlog = async function (req, res) {
       { new: true }
     );
     if (deleteBlog.modifiedCount === 0) {
-      return res.status(404).send({ status: false, msg: "page not founded" });
+      return res.status(404).send({ status: false, msg: "Blog already deleted" });
     }
-    return res.status(200).send({ status: true, data: deleteBlog });
+    return res.status(200).send({ status: true, data: deletedBlog });
   } catch (err) {
     return res.status(500).send({ msg: "error", error: err.message });
   }
