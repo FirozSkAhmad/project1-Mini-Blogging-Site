@@ -67,10 +67,15 @@ async function Authorisation2(req, res, next) {
   try {
     req.authorId = req.decodedPayload.authorId;
     let data = await blogModel.find(req.query).select({ authorId: 1, _id: 0 });
+    if(data.length===0){
+      return res
+        .status(404)
+        .send({ status: false, msg: "Data not founded" });
+    }
     // console.log(data);
     let Id = "";
     const authorIds = data.map((x) => x.authorId.toString());
-    console.log(authorIds);
+    // console.log(authorIds);
     for (let i = 0; i < authorIds.length; i++) {
       if (authorIds[i] === req.authorId) {
         // console.log(req.authorId);
