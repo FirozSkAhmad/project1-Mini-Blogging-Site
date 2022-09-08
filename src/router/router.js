@@ -28,6 +28,7 @@ router.delete(
   "/blogs/:blogId",
   middleWare.checkBlogId,
   authWare.Authentication,
+  authWare.Authorisation1,
   controlers.deleteBlogById
 );
 router.delete(

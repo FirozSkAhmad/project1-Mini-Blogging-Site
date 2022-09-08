@@ -85,10 +85,13 @@ async function updateBlogs(req, res) {
     return res.status(500).send({ status: false, msg: err.message });
   }
 }
+
+
 let deleteBlogById = async function (req, res) {
   try {
     let Id = req.params.blogId;
-    const deletedData = await blogModel.findByIdAndUpdate(
+    const deletedData = await blogModel.updateMany(
+
       { _id: Id, isDeleted: false },
       {
         $set: {
@@ -98,7 +101,7 @@ let deleteBlogById = async function (req, res) {
       },
       { new: true }
     );
-    if (!deletedData) {
+    if (deletedData.modifiedCount === 0) {
       return res.status(404).send({ status: false, msg: "page not founded" });
     }
     return res.status(200).send();
