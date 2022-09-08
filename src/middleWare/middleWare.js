@@ -9,7 +9,6 @@ async function checkAuthId(req, res, next) {
     }
     let Id = Data.authorId;
     if(!Id||Id.length==0){return res.status(400).send({status: false, msg : "provide authorId"})}
-
     const getData = await authorModel.findById(Id);
     if (!getData) {
       return res

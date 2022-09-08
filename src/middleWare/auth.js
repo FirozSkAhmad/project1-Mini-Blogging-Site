@@ -29,6 +29,22 @@ const Authentication = async function (req, res, next) {
   }
 };
 
+async function Authorisation0(req, res, next) {
+  try {
+    let authorId = req.decodedPayload.authorId;
+    let dataAuthorId = req.body.authorId;
+    if (dataAuthorId === authorId) {
+      next();
+    } else {
+      return res
+        .status(403)
+        .send({ status: false, msg: "User not authorised" });
+    }
+  } catch (error) {
+    return res.status(500).send({ status: false, msg: error.message });
+  }
+}
+
 async function Authorisation1(req, res, next) {
   try {
     let authorId = req.decodedPayload.authorId;
@@ -76,5 +92,6 @@ async function Authorisation2(req, res, next) {
 }
 
 module.exports.Authentication = Authentication;
+module.exports.Authorisation0 = Authorisation0;
 module.exports.Authorisation1 = Authorisation1;
 module.exports.Authorisation2 = Authorisation2;

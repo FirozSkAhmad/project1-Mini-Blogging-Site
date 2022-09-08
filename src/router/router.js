@@ -13,6 +13,7 @@ router.post(
   "/blogs",
   middleWare.checkAuthId,
   authWare.Authentication,
+  authWare.Authorisation0,
   controlers.createBlogData
 );
 router.get("/blogs", authWare.Authentication, controlers.getBlogs);
