@@ -77,8 +77,35 @@ async function createBlogData(req, res) {
 async function getBlogs(req, res) {
   try {
     const Data = req.query;
+    if (Object.keys(Data).includes("authorId")) {
+      if (!Data.authorId) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required authorId" });
+      }
+    }
+    if (Object.keys(Data).includes("category")) {
+      if (!Data.category) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required category" });
+      }
+    }
+    if (Object.keys(Data).includes("tags")) {
+      if (!Data.tags) {
+        return res.status(400).send({ status: false, msg: "required tags" });
+      }
+    }
+    if (Object.keys(Data).includes("subcategory")) {
+      if (!Data.subcategory) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required subcategory" });
+      }
+    }
     Data.isDeleted = false;
     Data.isPublished = true;
+    console.log(Data);
     const savedData = await blogModel.find(Data);
     if (savedData.length === 0) {
       return res.status(404).send({ status: false, msg: "page not founded" });
