@@ -120,6 +120,34 @@ async function updateBlogs(req, res) {
   try {
     const Id = req.params.blogId;
     const Data = req.body;
+    if (Object.keys(Data).includes("title")) {
+      if (!Data.title) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required title" });
+      }
+    }
+    if (Object.keys(Data).includes("body")) {
+      if (!Data.body) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required body" });
+      }
+    }
+    if (Object.keys(Data).includes("tags")) {
+      if (!Data.tags) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required tags" });
+      }
+    }
+    if (Object.keys(Data).includes("subcategory")) {
+      if (!Data.subcategory) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required subcategory" });
+      }
+    }
     const getData = await blogModel.findOneAndUpdate(
       { _id: Id, isDeleted: false },
       { $push: { tags: Data.tags, subcategory: Data.subcategory } }
