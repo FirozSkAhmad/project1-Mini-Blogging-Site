@@ -50,7 +50,46 @@ async function Authorisation1(req, res, next) {
 async function Authorisation2(req, res, next) {
   try {
     req.authorId = req.decodedPayload.authorId;
-    let data = await blogModel.find(req.query).select({ authorId: 1, _id: 0 });
+    const Data = req.query;
+    if (Object.keys(Data).includes("category")) {
+      if (!Data.category) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required category" });
+      }
+    }
+    if (Object.keys(Data).includes("authorId")) {
+      if (!Data.authorId) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required authorId" });
+      }
+    }
+    if (Object.keys(Data).includes("tags")) {
+      if (!Data.tags) {
+        return res.status(400).send({ status: false, msg: "required tags" });
+      }
+    }
+    if (Object.keys(Data).includes("subcategory")) {
+      if (!Data.subcategory) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required subcategory" });
+      }
+    }
+    if (Object.keys(Data).includes("isPublished")) {
+      if (!Data.isPublished) {
+        return res
+          .status(400)
+          .send({ status: false, msg: "required isPublished" });
+      }
+      if (Data.isPublished === "true") {
+        return res
+          .status(400)
+          .send({ status: false, msg: "isPublished should be false" });
+      }
+    }
+    let data = await blogModel.find(Data).select({ authorId: 1, _id: 0 });
     if (data.length === 0) {
       return res.status(404).send({ status: false, msg: "Data not founded" });
     }
