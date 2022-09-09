@@ -42,7 +42,7 @@ async function createAuthorData(req, res) {
     if (!Data.password) {
       return res.status(400).send({ status: false, msg: "required password" });
     }
-    if (!checkPassword(Data.password)) {
+    if (!checkPassword(Data.password.trim())) {
       return res.status(400).send({
         status: false,
         msg: "password should contain at least 1 lowercase, uppercase ,numeric alphabetical character and at least one special character and also The string must be eight characters or longer",

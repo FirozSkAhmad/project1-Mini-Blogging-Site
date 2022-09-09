@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const Authentication = async function (req, res, next) {
   try {
-    const getToken = req.headers["x-auth-token"];
+    const getToken = req.headers["x-api-key"];
     if (!getToken) {
       return res.status(401).send({ staus: false, msg: "require token" });
     }
