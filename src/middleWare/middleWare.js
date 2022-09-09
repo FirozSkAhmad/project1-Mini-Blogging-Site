@@ -7,11 +7,11 @@ async function checkAuthId(req, res, next) {
     if (Object.keys(Data).length < 1) {
       return res.status(400).send({ status: false, msg: "required Data" });
     }
-    let Id = Data.authorId.trim(); //Doubt
-    // console.log(Id)
-    if (!Id) {
+    if (!Data.authorId) {
       return res.status(400).send({ status: false, msg: "required authorId" });
     }
+    let Id = Data.authorId.trim(); //Doubt
+    // console.log(Id)
     const getData = await authorModel.findById(Id);
     if (!getData) {
       return res
