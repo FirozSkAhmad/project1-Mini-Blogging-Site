@@ -8,7 +8,7 @@ async function checkAuthId(req, res, next) {
       return res.status(400).send({ status: false, msg: "required Data" });
     }
     let Id = Data.authorId.trim(); //Doubt
-    // console.log([Id])
+    // console.log(Id)
     if (!Id) {
       return res.status(400).send({ status: false, msg: "required authorId" });
     }
