@@ -3,7 +3,7 @@ const app = express();
 const bodyparser = require("body-parser");
 
 const route = require("./router/router");
-const { default: mongoose } = require("mongoose");
+const  mongoose = require("mongoose");
 
 app.use(bodyparser.json());
 // app.use(bodyparser.urlencoded({ extended: true }));
