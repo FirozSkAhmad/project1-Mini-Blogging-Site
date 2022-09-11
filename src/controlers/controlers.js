@@ -109,14 +109,14 @@ async function createBlogData(req, res) {
     if (!Data.category) {
       return res.status(400).send({ status: false, msg: "required category" });
     }
-    if(Object.keys(Data).includes("isDeleted")){
-      if(Data.isDeleted===true||"true"){
-        Data.deletedAt=moment().format()
+    if (Object.keys(Data).includes("isDeleted")) {
+      if (Data.isDeleted === true || "true") {
+        Data.deletedAt = moment().format();
       }
     }
-    if(Object.keys(Data).includes("isPublished")){
-      if(Data.isPublished===true||"true"){
-        Data.publishedAt=moment().format()
+    if (Object.keys(Data).includes("isPublished")) {
+      if (Data.isPublished === true || "true") {
+        Data.publishedAt = moment().format();
       }
     }
     const savedData = await blogModel.create(Data);
@@ -253,7 +253,9 @@ let deleteBlogById = async function (req, res) {
       { new: true }
     );
     if (deletedData.modifiedCount === 0) {
-      return res.status(404).send({ status: false, msg: "Blog already deleted" });
+      return res
+        .status(404)
+        .send({ status: false, msg: "Blog already deleted" });
     }
     return res.status(204).send();
   } catch (err) {
@@ -266,7 +268,7 @@ let deleteBlogById = async function (req, res) {
 let deleteBlog = async function (req, res) {
   try {
     const deletedBlog = await blogModel.updateMany(
-      { _id:{$in:req.Ids}, isDeleted: false },
+      { _id: { $in: req.Ids }, isDeleted: false },
       {
         $set: {
           isDeleted: true,
@@ -293,4 +295,3 @@ module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
 module.exports.deleteBlogById = deleteBlogById;
 module.exports.deleteBlog = deleteBlog;
-
