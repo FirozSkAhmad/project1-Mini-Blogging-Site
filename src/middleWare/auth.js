@@ -2,6 +2,8 @@ const authorModel = require("../model/authorModel");
 const blogModel = require("../model/blogModel");
 const jwt = require("jsonwebtoken");
 
+//==============================Authentication========================================//
+
 const Authentication = async function (req, res, next) {
   try {
     const getToken = req.headers["x-api-key"];
@@ -13,13 +15,6 @@ const Authentication = async function (req, res, next) {
         return res.status(401).send({ status: false, msg: error.message });
       } else {
         req.decodedPayload = decoded;
-        // {
-        //     decodedPayload:{
-        //         authorId : logined._id.toString(),
-        //         batch : "Plutonium"
-        //     }
-        // }
-        // console.log(req.decodedPayload);
         next();
       }
     });
@@ -29,11 +24,12 @@ const Authentication = async function (req, res, next) {
   }
 };
 
+//==============================Authorisation1========================================//
+
 async function Authorisation1(req, res, next) {
   try {
     let authorId = req.decodedPayload.authorId;
     let data = await blogModel.findById(req.params.blogId);
-    // console.log(data.authorId);
     let dataAuthorId = data.authorId.toString();
     if (dataAuthorId === authorId) {
       next();
@@ -47,10 +43,17 @@ async function Authorisation1(req, res, next) {
   }
 }
 
+//==============================Authorisation2========================================//
+
 async function Authorisation2(req, res, next) {
   try {
     req.authorId = req.decodedPayload.authorId;
     const Data = req.query;
+    if(Object.keys(Data).length<1){
+      return res
+          .status(400)
+          .send({ status: false, msg: "required atleast one filter" });
+    }
     if (Object.keys(Data).includes("category")) {
       if (!Data.category) {
         return res
@@ -89,24 +92,22 @@ async function Authorisation2(req, res, next) {
           .send({ status: false, msg: "isPublished should be false" });
       }
     }
-    let data = await blogModel.find(Data).select({ authorId: 1, _id: 0 });
+    let data = await blogModel.find(Data).select({ authorId: 1, _id: 1 });
     if (data.length === 0) {
       return res.status(404).send({ status: false, msg: "Data not founded" });
     }
     // console.log(data);
-    let Id = "";
+     req.Ids = [];
     const authorIds = data.map((x) => x.authorId.toString());
+    const blogIds = data.map((x) => x._id.toString());
     // console.log(authorIds);
     for (let i = 0; i < authorIds.length; i++) {
       if (authorIds[i] === req.authorId) {
-        // console.log(req.authorId);
-        if (!Id) {
-          Id += req.authorId;
-        }
+        req.Ids.push(blogIds[i])
       }
     }
-    // console.log(Id);
-    if (!Id) {
+    // console.log(req.Ids);
+    if (!req.Ids.length===0) {
       return res
         .status(403)
         .send({ status: false, msg: "User not authorised" });

@@ -9,6 +9,7 @@ router.get("/test-me", function (req, res) {
 });
 
 router.post("/authors", controlers.createAuthorData);
+router.post("/login", controlers.login);
 router.post(
   "/blogs",
   authWare.Authentication,
@@ -36,7 +37,6 @@ router.delete(
   authWare.Authorisation2,
   controlers.deleteBlog
 );
-router.post("/login", controlers.login);
 
 module.exports = router;
 

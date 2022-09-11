@@ -8,6 +8,8 @@ function checkPassword(str) {
   return re.test(str);
 }
 
+//==============================createAuthorData========================================//
+
 async function createAuthorData(req, res) {
   try {
     const Data = req.body;
@@ -55,6 +57,46 @@ async function createAuthorData(req, res) {
   }
 }
 
+//==============================login========================================//
+
+async function login(req, res) {
+  try {
+    const data = req.body;
+    if (Object.keys(data).length < 1) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "required email and password" });
+    }
+    if (!data.email) {
+      return res.status(400).send({ status: false, msg: "email is required" });
+    }
+    if (!data.password) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "password is required" });
+    }
+
+    const logined = await authorModel.findOne(data);
+    if (!logined) {
+      return res
+        .status(401)
+        .send({ status: false, msg: "email or password is wrong" });
+    }
+    const token = jwt.sign(
+      {
+        authorId: logined._id.toString(),
+        batch: "Plutonium",
+      },
+      "project-pltm"
+    );
+    return res.status(201).send({ status: true, data: token });
+  } catch (err) {
+    return res.status(500).send({ status: false, msg: err.message });
+  }
+}
+
+//==============================createBlogData========================================//
+
 async function createBlogData(req, res) {
   try {
     const Data = req.body;
@@ -73,6 +115,8 @@ async function createBlogData(req, res) {
     return res.status(500).send({ status: false, msg: err.message });
   }
 }
+
+//==============================getBlogs========================================//
 
 async function getBlogs(req, res) {
   try {
@@ -105,7 +149,6 @@ async function getBlogs(req, res) {
     }
     Data.isDeleted = false;
     Data.isPublished = true;
-    console.log(Data);
     const savedData = await blogModel.find(Data);
     if (savedData.length === 0) {
       return res.status(404).send({ status: false, msg: "page not founded" });
@@ -116,29 +159,25 @@ async function getBlogs(req, res) {
   }
 }
 
+//==============================updateBlogs========================================//
+
 async function updateBlogs(req, res) {
   try {
     const Id = req.params.blogId;
     const Data = req.body;
     if (Object.keys(Data).includes("title")) {
       if (!Data.title) {
-        return res
-          .status(400)
-          .send({ status: false, msg: "required title" });
+        return res.status(400).send({ status: false, msg: "required title" });
       }
     }
     if (Object.keys(Data).includes("body")) {
       if (!Data.body) {
-        return res
-          .status(400)
-          .send({ status: false, msg: "required body" });
+        return res.status(400).send({ status: false, msg: "required body" });
       }
     }
     if (Object.keys(Data).includes("tags")) {
       if (!Data.tags) {
-        return res
-          .status(400)
-          .send({ status: false, msg: "required tags" });
+        return res.status(400).send({ status: false, msg: "required tags" });
       }
     }
     if (Object.keys(Data).includes("subcategory")) {
@@ -188,6 +227,8 @@ async function updateBlogs(req, res) {
   }
 }
 
+//==============================deleteBlogById========================================//
+
 let deleteBlogById = async function (req, res) {
   try {
     let Id = req.params.blogId;
@@ -202,7 +243,7 @@ let deleteBlogById = async function (req, res) {
       { new: true }
     );
     if (deletedData.modifiedCount === 0) {
-      return res.status(404).send({ status: false, msg: "page not founded" });
+      return res.status(404).send({ status: false, msg: "Blog already deleted" });
     }
     return res.status(200).send();
   } catch (err) {
@@ -210,10 +251,12 @@ let deleteBlogById = async function (req, res) {
   }
 };
 
+//==============================deleteBlog========================================//
+
 let deleteBlog = async function (req, res) {
   try {
     const deletedBlog = await blogModel.updateMany(
-      { authorId: req.authorId, isDeleted: false },
+      { _id:{$in:req.Ids}, isDeleted: false },
       {
         $set: {
           isDeleted: true,
@@ -222,7 +265,7 @@ let deleteBlog = async function (req, res) {
       },
       { new: true }
     );
-    if (deleteBlog.modifiedCount === 0) {
+    if (deletedBlog.modifiedCount === 0) {
       return res
         .status(404)
         .send({ status: false, msg: "Blog already deleted" });
@@ -233,50 +276,11 @@ let deleteBlog = async function (req, res) {
   }
 };
 
-async function login(req, res) {
-  try {
-    const data = req.body;
-    if (!data.email && !data.password) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "email and password is required" });
-    }
-    if (!data.email) {
-      return res.status(400).send({ status: false, msg: "email is required" });
-    }
-    if (!data.password) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "password is required" });
-    }
-    if (Object.keys(data).length < 1) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "required email and password" });
-    }
-    const logined = await authorModel.findOne(data);
-    if (!logined) {
-      return res
-        .status(401)
-        .send({ status: false, msg: "email or password is wrong" });
-    }
-    const token = jwt.sign(
-      {
-        authorId: logined._id.toString(),
-        batch: "Plutonium",
-      },
-      "project-pltm"
-    );
-    return res.status(201).send({ status: true, data: token });
-  } catch (err) {
-    return res.status(500).send({ status: false, msg: err.message });
-  }
-}
-
 module.exports.createAuthorData = createAuthorData;
+module.exports.login = login;
 module.exports.createBlogData = createBlogData;
 module.exports.getBlogs = getBlogs;
 module.exports.updateBlogs = updateBlogs;
 module.exports.deleteBlogById = deleteBlogById;
 module.exports.deleteBlog = deleteBlog;
-module.exports.login = login;
+

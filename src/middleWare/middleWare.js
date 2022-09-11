@@ -1,6 +1,8 @@
 const authorModel = require("../model/authorModel");
 const blogModel = require("../model/blogModel");
 
+//==============================checkAuthId========================================//
+
 async function checkAuthId(req, res, next) {
   try {
     const Data = req.body;
@@ -11,7 +13,7 @@ async function checkAuthId(req, res, next) {
       return res.status(400).send({ status: false, msg: "required authorId" });
     }
     let Id = Data.authorId.trim(); //Doubt
-    // console.log(Id)
+    // console.log([Id])
     const getData = await authorModel.findById(Id);
     if (!getData) {
       return res
@@ -31,6 +33,8 @@ async function checkAuthId(req, res, next) {
     return res.status(500).send({ status: false, msg: err.message });
   }
 }
+
+//==============================checkBlogId========================================//
 
 async function checkBlogId(req, res, next) {
   try {
