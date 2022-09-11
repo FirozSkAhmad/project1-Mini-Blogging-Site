@@ -7,6 +7,10 @@ function checkPassword(str) {
   var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
   return re.test(str);
 }
+function checkname(str) {
+  var re = /^[A-Za-z]*$/;
+  return re.test(str);
+}
 
 //==============================createAuthorData========================================//
 
@@ -19,8 +23,20 @@ async function createAuthorData(req, res) {
     if (!Data.fname) {
       return res.status(400).send({ status: false, msg: "required fname" });
     }
+    if (!checkname(Data.fname.trim())) {
+      return res.status(400).send({
+        status: false,
+        msg: "fname should not contain any numbers",
+      });
+    }
     if (!Data.lname) {
       return res.status(400).send({ status: false, msg: "required lname" });
+    }
+    if (!checkname(Data.lname.trim())) {
+      return res.status(400).send({
+        status: false,
+        msg: "lname should not contain any numbers",
+      });
     }
     if (!Data.title) {
       return res.status(400).send({ status: false, msg: "required title" });
