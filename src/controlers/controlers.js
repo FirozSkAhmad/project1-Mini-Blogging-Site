@@ -209,7 +209,7 @@ async function updateBlogs(req, res) {
         { $set: Data },
         { new: true }
       );
-      return res.status(200).send({ status: true, data: updatedData });
+      return res.status(204).send({ status: true, data: updatedData });
     } else {
       // console.log(Data);
       delete Data["tags"];
@@ -220,7 +220,7 @@ async function updateBlogs(req, res) {
         { $set: Data },
         { new: true }
       );
-      return res.status(200).send({ status: true, data: updatedData });
+      return res.status(204).send({ status: true, data: updatedData });
     }
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
@@ -245,7 +245,7 @@ let deleteBlogById = async function (req, res) {
     if (deletedData.modifiedCount === 0) {
       return res.status(404).send({ status: false, msg: "Blog already deleted" });
     }
-    return res.status(200).send();
+    return res.status(204).send();
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
@@ -270,7 +270,7 @@ let deleteBlog = async function (req, res) {
         .status(404)
         .send({ status: false, msg: "Blog already deleted" });
     }
-    return res.status(200).send({ status: true, data: deletedBlog });
+    return res.status(204).send({ status: true, data: deletedBlog });
   } catch (err) {
     return res.status(500).send({ msg: "error", error: err.message });
   }
