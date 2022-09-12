@@ -176,6 +176,7 @@ async function getBlogs(req, res) {
     Data.isDeleted = false;
     Data.isPublished = true;
     const savedData = await blogModel.find(Data);
+    console.log(savedData)
     if (savedData.length === 0) {
       return res.status(404).send({ status: false, msg: "page not founded" });
     }

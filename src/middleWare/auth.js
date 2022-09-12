@@ -107,7 +107,7 @@ async function Authorisation2(req, res, next) {
       }
     }
     // console.log(req.Ids);
-    if (!req.Ids.length === 0) {
+    if (req.Ids.length === 0) {
       return res
         .status(403)
         .send({ status: false, msg: "User not authorised" });
