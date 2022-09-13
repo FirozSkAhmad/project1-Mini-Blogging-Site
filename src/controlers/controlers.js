@@ -46,6 +46,9 @@ async function createAuthorData(req, res) {
         .status(400)
         .send({ status: false, msg: "required valid title" });
     }
+    if (!Data.email) {
+      return res.status(400).send({ status: false, msg: "required email" });
+    }
     if (!validator.isEmail(Data.email.trim())) {
       return res
         .status(400)
@@ -85,6 +88,11 @@ async function login(req, res) {
     }
     if (!data.email) {
       return res.status(400).send({ status: false, msg: "email is required" });
+    }
+    if (!validator.isEmail(data.email.trim())) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "required valid email" });
     }
     if (!data.password) {
       return res
