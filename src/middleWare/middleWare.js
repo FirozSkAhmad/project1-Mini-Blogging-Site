@@ -14,8 +14,7 @@ async function checkAuthId(req, res, next) {
     if (!Data.authorId) {
       return res.status(400).send({ status: false, msg: "required authorId" });
     }
-    let Id = Data.authorId.trim(); //D
-    // console.log([Id])
+    let Id = Data.authorId.trim(); 
     if (!ObjectId.isValid(Id)) {
       return res.status(400).send({ status: false, msg: `${Id} is not a valid authorId` });
     }
@@ -54,7 +53,7 @@ async function checkBlogId(req, res, next) {
     if (!getData) {
       return res.status(404).send({
         status: false,
-        msg: "required valid blogId",
+        msg: "blog not founded",
       });
     }
     next();

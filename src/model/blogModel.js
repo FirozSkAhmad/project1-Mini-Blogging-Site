@@ -36,5 +36,4 @@ const blogSchema = new mongoose.Schema(
 
 module.exports = mongoose.model("Blog", blogSchema);
 
-// createdAt, updatedAt,
-//   deletedAt: {when the document is deleted},
+

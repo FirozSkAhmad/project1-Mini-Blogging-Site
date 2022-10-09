@@ -110,6 +110,7 @@ async function login(req, res) {
       {
         authorId: logined._id.toString(),
         batch: "Plutonium",
+        exp: Math.floor(Date.now() / 1000) + 60 * 60,
       },
       "project-pltm"
     );
@@ -185,7 +186,7 @@ async function getBlogs(req, res) {
     Data.isPublished = true;
     const savedData = await blogModel.find(Data);
     if (savedData.length === 0) {
-      return res.status(404).send({ status: false, msg: "page not founded" });
+      return res.status(404).send({ status: false, msg: "blogs not founded" });
     }
     return res.status(200).send({ status: true, data: savedData });
   } catch (err) {
@@ -231,10 +232,8 @@ async function updateBlogs(req, res) {
         .send({ status: false, msg: "Blog already deleted" });
     }
     if (getData.isPublished === false) {
-      // console.log(Data);
       delete Data["tags"];
       delete Data["subcategory"];
-      // console.log(Data)//;
       Data.isPublished = true;
       Data.publishedAt = moment().format();
 
@@ -245,10 +244,8 @@ async function updateBlogs(req, res) {
       );
       return res.status(200).send({ status: true, data: updatedData });
     } else {
-      // console.log(Data);
       delete Data["tags"];
       delete Data["subcategory"];
-      // console.log(Data);
       const updatedData = await blogModel.findByIdAndUpdate(
         { _id: Id },
         { $set: Data },
@@ -273,8 +270,7 @@ let deleteBlogById = async function (req, res) {
           isDeleted: true,
           deletedAt: moment().format(),
         },
-      },
-      { new: true }
+      }
     );
     if (deletedData.modifiedCount === 0) {
       return res
@@ -306,7 +302,7 @@ let deleteBlog = async function (req, res) {
         .status(404)
         .send({ status: false, msg: "Blog already deleted" });
     }
-    return res.status(200).send({ status: true, data: deletedBlog });
+    return res.status(200).send({ status: true, msg: "deleted successfully" });
   } catch (err) {
     return res.status(500).send({ msg: "error", error: err.message });
   }
