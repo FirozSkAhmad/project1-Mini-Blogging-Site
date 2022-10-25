@@ -134,11 +134,6 @@ async function createBlogData(req, res) {
     if (!Data.category) {
       return res.status(400).send({ status: false, msg: "required category" });
     }
-    if (Object.keys(Data).includes("isDeleted")) {
-      if (Data.isDeleted === true || "true") {
-        Data.deletedAt = moment().format();
-      }
-    }
     if (Object.keys(Data).includes("isPublished")) {
       if (Data.isPublished === true || "true") {
         Data.publishedAt = moment().format();

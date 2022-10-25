@@ -31,11 +31,6 @@ const Authentication = async function (req, res, next) {
 async function Authorisation1(req, res, next) {
   try {
     let authorId = req.decodedPayload.authorId;
-    // if (!ObjectId.isValid(authorId)) {
-    //   return res
-    //     .status(400)
-    //     .send({ status: false, msg: `${authorId} is not a valid authorId` });
-    // }
     let data = await blogModel.findById(req.params.blogId);
     let dataAuthorId = data.authorId.toString();
     if (dataAuthorId === authorId) {
@@ -55,14 +50,6 @@ async function Authorisation1(req, res, next) {
 async function Authorisation2(req, res, next) {
   try {
     req.authorId = req.decodedPayload.authorId;
-    if (!ObjectId.isValid(req.authorId)) {
-      return res
-        .status(400)
-        .send({
-          status: false,
-          msg: `${req.authorId} is not a valid authorId`,
-        });
-    }
     const Data = req.query;
     if (Object.keys(Data).length < 1) {
       return res
