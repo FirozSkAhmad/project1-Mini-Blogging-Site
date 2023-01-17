@@ -176,6 +176,7 @@ async function getBlogs(req, res) {
           .status(400)
           .send({ status: false, msg: "required subcategory" });
       }
+      Data.subcategory = { $in: Data.subcategory }
     }
     Data.isDeleted = false;
     Data.isPublished = true;
@@ -258,7 +259,7 @@ async function updateBlogs(req, res) {
 let deleteBlogById = async function (req, res) {
   try {
     let Id = req.params.blogId;
-    const deletedData = await blogModel.updateMany(
+    const deletedData = await blogModel.findOneAndUpdate(
       { _id: Id, isDeleted: false },
       {
         $set: {
@@ -267,7 +268,7 @@ let deleteBlogById = async function (req, res) {
         },
       }
     );
-    if (deletedData.modifiedCount === 0) {
+    if (!deletedData) {
       return res
         .status(404)
         .send({ status: false, msg: "Blog already deleted" });

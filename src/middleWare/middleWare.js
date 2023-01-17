@@ -63,6 +63,7 @@ async function checkBlogId(req, res, next) {
         msg: "blog not founded",
       });
     }
+    req.dataAuthorId = getData.authorId.toString()
     next();
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });

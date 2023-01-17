@@ -31,8 +31,7 @@ const Authentication = async function (req, res, next) {
 async function Authorisation1(req, res, next) {
   try {
     let authorId = req.decodedPayload.authorId;
-    let data = await blogModel.findById(req.params.blogId);
-    let dataAuthorId = data.authorId.toString();
+    let dataAuthorId = req.dataAuthorId
     if (dataAuthorId === authorId) {
       next();
     } else {
@@ -98,17 +97,14 @@ async function Authorisation2(req, res, next) {
     if (data.length === 0) {
       return res.status(404).send({ status: false, msg: "Data not founded" });
     }
-    // console.log(data);
     req.Ids = [];
     const authorIds = data.map((x) => x.authorId.toString());
     const blogIds = data.map((x) => x._id.toString());
-    // console.log(authorIds);
     for (let i = 0; i < authorIds.length; i++) {
       if (authorIds[i] === req.authorId) {
         req.Ids.push(blogIds[i]);
       }
     }
-    // console.log(req.Ids);
     if (req.Ids.length === 0) {
       return res
         .status(403)
